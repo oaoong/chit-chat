@@ -12,13 +12,16 @@ html
   body
     center
       div
-        button.btn.btn-info(type='button') Goorm 채팅방
+        button.btn.btn-info(type='button') 무야호 채팅방
       div
         textarea#chatLog.form-control(readonly='')
       form#chat
         input#name.form-control(type='text')
-        input#message.form-control(type='text')
-        button.btn.btn-primary(type='submit') 전송
+        div.chatinput
+          input#message.form-control(type='text')
+          button.btn.btn-primary(type='submit') 전송
+      div.userlist
+        textarea#currentUserList.form-control(readonly='')
       #box.box
 	  
     script.
@@ -44,10 +47,17 @@ html
       $('#chatLog').scrollTop($('#chatLog')[0].scrollHeight);
       });
 	  
-      socket.on('new_disconnect', function(name){  // 채팅방 접속이 끊어졌을 때 - 5
+      socket.on('new_disconnect', function(name, whoIsOn){  // 채팅방 접속이 끊어졌을 때 - 5
       $('#chatLog').append('<알림> ' + name + '님이 채팅창을 떠났습니다.\n');
+      editUsers(whoIsOn);
       });
 	  
-      socket.on('new_connect', function(name){  // 채팅방에 접속했을 때 - 6
+      socket.on('new_connect', function(name, whoIsOn){  // 채팅방에 접속했을 때 - 6
       $('#chatLog').append('<알림> ' + name + '님이 채팅창에 접속했습니다.\n');
+      editUsers(whoIsOn);
+      console.log(whoIsOn);
       });
+
+      function editUsers(nameArray){
+        $('#currentUserList').val("실시간 접속자\n"+ nameArray);
+      }

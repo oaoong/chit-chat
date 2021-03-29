@@ -5,6 +5,7 @@ var app = express();
 var http = require("http").Server(app);
 var io = require("socket.io")(http);
 var path = require("path");
+var whoIsOn = [];
 
 app.set("views", "./views");
 app.set("view engine", "pug");
@@ -21,12 +22,16 @@ io.on("connection", function (socket) {
   var name = "익명" + count++;
   socket.name = name;
   io.to(socket.id).emit("create name", name);
-  io.emit("new_connect", name);
+  whoIsOn.push(name);
+  io.emit("new_connect", name, whoIsOn);
+  console.log(whoIsOn);
 
   socket.on("disconnect", function () {
     // 채팅방 접속이 끊어졌을 때 - 2
     console.log("user disconnected: " + socket.id + " " + socket.name);
-    io.emit("new_disconnect", socket.name);
+    whoIsOn.splice(whoIsOn.indexOf(socket.name), 1);
+    io.emit("new_disconnect", socket.name, whoIsOn);
+    console.log(whoIsOn);
   });
 
   socket.on("send message", function (name, text) {
