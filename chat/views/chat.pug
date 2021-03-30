@@ -38,8 +38,9 @@ html
       $('#name').val(name);
       });
 	  
-      socket.on('change name', function(oldname, name){   // 닉네임을 바꿨을 때 - 3
+      socket.on('change name', function(oldname, name, whoIsOn){   // 닉네임을 바꿨을 때 - 3
       $('#chatLog').append('<알림> ' + oldname + '님이 ' + name +'님으로 닉네임을 변경했습니다.\n');
+      editUsers(whoIsOn);
       });
 	  
       socket.on('receive message', function(msg){   // 메세지를 받았을 때 - 4
@@ -59,5 +60,5 @@ html
       });
 
       function editUsers(nameArray){
-        $('#currentUserList').val("실시간 접속자\n"+ nameArray);
+        $('#currentUserList').val("실시간 접속자\n"+"----------------\n"+nameArray);
       }

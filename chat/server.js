@@ -37,9 +37,12 @@ io.on("connection", function (socket) {
   socket.on("send message", function (name, text) {
     // 메세지를 보냈을 때 - 3
     var msg = name + " : " + text;
-    if (name != socket.name)
+    if (name != socket.name) {
       // 닉네임을 바꿨을 때
-      io.emit("change name", socket.name, name);
+      whoIsOn.push(name);
+      whoIsOn.splice(whoIsOn.indexOf(socket.name), 1);
+      io.emit("change name", socket.name, name, whoIsOn);
+    }
     socket.name = name;
     console.log(msg);
     io.emit("receive message", msg);
